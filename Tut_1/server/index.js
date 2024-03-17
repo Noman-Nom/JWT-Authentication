@@ -16,7 +16,7 @@ const users = [
 
     {
         id : 2,
-        username : 'Muhammmad Anwar',
+        username : 'Muhammad Anwar',
         password : 'Anwar1234',
         isAdmin : false
 
@@ -82,16 +82,16 @@ const users = [
 
             }
 
-            app.delete("/api/users/:userId",verify,(req,res)=>{
-
-                if(req.user.id === req.params.userId || req.user.isAdmin){
-
+            app.delete("/api/users/:userId", verify, (req, res) => {
+                const userId = req.params.userId;
+                if (req.user.id === Number(userId) || req.user.isAdmin) {
                     res.json("User has been deleted");
-
-                }else{
-
-                    res.status(403).json("You are not allowed to delete this user")
+                } else {
+                    res.status(403).json("You are not allowed to delete this user");
                 }
-            })
+            });
+            
+            // number issue  This modification ensures that you're comparing numbers with numbers, which should 
+            // resolve the issue of a non-admin user being unable to delete their own account.
  
 app.listen(5000,()=>console.log('Server Running'))
