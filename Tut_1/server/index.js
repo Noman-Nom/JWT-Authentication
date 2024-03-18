@@ -10,7 +10,6 @@ const users = [
     password: "noman1234",
     isAdmin: true,
   },
-
   {
     id: 2,
     username: "Muhammad Anwar",
@@ -26,55 +25,46 @@ app.post("/api/refresh", (req, res) => {
 
   if (!refreshToken) return res.status(401).json("You are not authenticated");
 
-  if (!refreshTokens.includes(refreshToken)){
+  if (!refreshTokens.includes(refreshToken)) {
     return res.status(403).json("Refresh token is not valid");
   }
-    jwt.verify(refreshToken, "myRefreshSecreteKey", (err, user) => {
 
-        err && console.log(err);
-        refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+  jwt.verify(refreshToken, "myRefreshSecreteKey", (err, user) => {
+    if (err) {
+      console.log(err);
+      return res.status(403).json("Invalid refresh token");
+    }
 
-        const newAccessToken = geenrateAccessToken(user);
-        const newRefreshToken = generateRefreshToken(user);
+    refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
 
-        refreshTokens.push(newRefreshToken);
+    const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user);
 
-        res.json({  
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
-        });
+    refreshTokens.push(newRefreshToken);
 
+    res.json({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
     });
-  
-   
-}
+  });
+});
 
-     
-
-
-);
-
-const geenrateAccessToken = (user) => {
+const generateAccessToken = (user) => {
   return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "mySecretKey", {
-    expiresIn: "15m",
+    expiresIn: "30s",
   });
 };
 
 const generateRefreshToken = (user) => {
-  return jwt.sign(
-    { id: user.id, isAdmin: user.isAdmin },
-    "myRefreshSecreteKey"
-  );
+  return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "myRefreshSecreteKey");
 };
 
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
-  const user = users.find((u) => {
-    return u.username === username && u.password === password;
-  });
+  const user = users.find((u) => u.username === username && u.password === password);
+
   if (user) {
-    // res.json(user);
-    const accessToken = geenrateAccessToken(user);
+    const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
     refreshTokens.push(refreshToken);
@@ -82,21 +72,18 @@ app.post("/api/login", (req, res) => {
     res.json({
       username: user.username,
       isAdmin: user.isAdmin,
-      accessToken: accessToken,
+      accessToken,
+      refreshToken, // Ensure this is included if you want it returned
     });
   } else {
     res.status(400).json({ message: "Invalid Username or Password" });
   }
-
-  // res.json("Working")  for testing postman
 });
 
 const verify = (req, res, next) => {
   const authHeader = req.headers.authorization;
-
   if (authHeader) {
     const token = authHeader.split(" ")[1];
-
     jwt.verify(token, "mySecretKey", (err, user) => {
       if (err) {
         return res.status(403).json("Token is not valid");
@@ -105,7 +92,7 @@ const verify = (req, res, next) => {
       next();
     });
   } else {
-    res.status(401).json({ message: "You are not authenticated" });
+    res.status(401).json("You are not authenticated");
   }
 };
 
@@ -117,8 +104,5 @@ app.delete("/api/users/:userId", verify, (req, res) => {
     res.status(403).json("You are not allowed to delete this user");
   }
 });
-
-// number issue  This modification ensures that you're comparing numbers with numbers, which should
-// resolve the issue of a non-admin user being unable to delete their own account.
 
 app.listen(5000, () => console.log("Server Running"));
