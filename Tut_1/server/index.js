@@ -95,6 +95,27 @@ const verify = (req, res, next) => {
     res.status(401).json("You are not authenticated");
   }
 };
+const verifyRefreshToken = (req, res, next) => {
+  const refreshToken = req.body.token;
+  if (refreshToken) {
+    jwt.verify(refreshToken, "myRefreshSecreteKey", (err, user) => {
+      if (err) {
+        return res.status(403).json("Token is not valid");
+      }
+      req.user = user;
+      next();
+    });
+  } else {
+    res.status(401).json("You are not authenticated");
+  }
+};
+
+app.post("/api/logout", verifyRefreshToken, (req, res) => {
+  const refreshToken = req.body.token;
+  refreshTokens = refreshTokens.filter(token => token !== refreshToken);
+  res.status(200).json("You logged out successfully");
+});
+
 
 app.delete("/api/users/:userId", verify, (req, res) => {
   const userId = req.params.userId;
@@ -103,6 +124,15 @@ app.delete("/api/users/:userId", verify, (req, res) => {
   } else {
     res.status(403).json("You are not allowed to delete this user");
   }
+});
+
+app.post("/api/logout" , verify , (req , res)=>{
+
+  const refreshToken = req.body.token;
+
+  refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+  res.status(200).json("You logged out successfully");
+
 });
 
 app.listen(5000, () => console.log("Server Running"));
