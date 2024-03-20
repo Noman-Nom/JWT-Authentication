@@ -1,0 +1,86 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main_Home{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+
+    .left_Home{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        padding: 10px;
+        background-color: rgb(11, 23, 44);
+        height: 100vh;
+        width: 17%;
+        position: relative;
+
+        button{
+            padding: 4px;
+            border-radius: 5px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        input{
+            padding: 4px;
+            border-radius: 5px;
+            background-color: white;
+            cursor: text;
+            outline: none;
+            border: none;
+            width: 85%;
+            
+            
+        }
+        .search{
+            display: flex;
+            flex-direction: row;
+            background-color: white;
+            // justify-content: center;
+            align-items: center;
+            border-radius: 3px;
+            width: 90%;
+            padding: 2px;
+            margin-top: 2px;
+            
+
+            
+        }
+        .profile{
+            display: flex;
+            color: white;
+            align-items: center;
+            position: absolute;
+            bottom: 2%;
+            left: 30%;
+            gap: 5px;
+            
+            
+    
+        }
+    }
+
+    .right_Home{
+        width: 83%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        p{
+            width: 50%;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
