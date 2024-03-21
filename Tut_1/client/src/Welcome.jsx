@@ -5,6 +5,7 @@ const Welcome = ({ user }) => {
     <div>
       <h1>Welcome, {user.username}</h1>
       <p>You are logged in as {user.isAdmin ? 'Admin' : 'User'}.</p>
+      
     </div>
   );
 };

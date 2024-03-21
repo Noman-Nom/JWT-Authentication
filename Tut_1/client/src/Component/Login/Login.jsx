@@ -1,39 +1,48 @@
-// Login.js
-
 import React, { useState } from 'react';
 import './Login.scss';
-import { Link, Navigate } from 'react-router-dom'; // Import Navigate instead of Redirect
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Login = () => {
-  const [value, setValue] = useState({
+  const [values, setValues] = useState({
     username: '',
-    password: ''
+    password: '',
   });
-  const [response, setResponse] = useState(null);
-  const [redirect, setRedirect] = useState(false);
+
+  const navigate = useNavigate(); // useNavigate for redirection
 
   const handleChange = (e) => {
-    setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
     try {
-      const res = await axios.post("http://localhost:5000/api/login", value);
-      setResponse(res.data);
-      setRedirect(true); // Redirect the user after successful login
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: values.username,
+          password: values.password,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.status === 200) {
+        alert('Logged in successfully');
+        navigate('/home'); // Redirect to Home page
+      } else {
+        alert(data.message || 'Failed to login');
+      }
     } catch (error) {
-      console.log(error);
+      console.error('Login error:', error);
+      alert('An error occurred during login. Please try again.');
     }
   };
 
-  if (redirect) {
-    return <Navigate to={{ pathname: "/home", state: { userData: response } }} />; // Use Navigate instead of Redirect
-  }
-
   return (
-    <div>
+    <form onSubmit={handleSubmit}>{/* Add form submission handler */}
       <div className="main">
         <div className="left">
           <div>
@@ -47,27 +56,23 @@ const Login = () => {
               <h3>Log in to your account</h3>
               <p>Welcome back! Please enter your details.</p>
             </div>
+
             <div className='input'>
-              <label htmlFor="email">Email</label><br />
-              <input onChange={handleChange} type="text" name="username" id="email" placeholder='Enter your username' />
+              <label htmlFor="username">Username</label><br />
+              <input onChange={handleChange} type="text" name="username" id="username" placeholder='Enter your username'/>
             </div>
+
             <div className='input'>
               <label htmlFor="password">Password</label><br />
-              <input onChange={handleChange} type="password" name="password" id="password" placeholder='Enter your password' />
+              <input onChange={handleChange} type="password" name="password" id="password" placeholder='Enter your password'/>
             </div>
-            <div id='remember'>
-              <div>
-                <input type="checkbox" name="remember me" />
-                <label htmlFor="remember me">Remember Password</label> </div>
-              <a href="#">Forgot Password?</a>
-            </div>
-            <button type='submit' onClick={handleSubmit} className='login'>Log in</button>
-            <Link to="/signup"><button className='signup'>Sign up</button></Link>
+
+            {/* The rest of your component */}
+            <button type="submit" className='login'>Log in</button>
           </div>
         </div>
-        
       </div>
-    </div>
+    </form>
   );
 };
 

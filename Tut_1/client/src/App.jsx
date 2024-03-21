@@ -9,29 +9,18 @@ import Welcome from './Welcome'
 
 const App = () => {
 
-  const [user, setUser] = useState(null);
-
-  const handleLoginSuccess = (userData) => {
-    setUser(userData);
-  };
+  
   return (
     <div>
-      {/* <BrowserRouter>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />}  />
           <Route path="/signup" element={<Signup/>} />
           <Route path="/home" element={<Home/>} />
         </Routes>
       
-      </BrowserRouter> */}
+      </BrowserRouter>
 
-      <div>
-      {!user ? (
-        <LoginTest onLoginSuccess={handleLoginSuccess} />
-      ) : (
-        <Welcome user={user} />
-      )}
-    </div>
     </div>
   )
 }
