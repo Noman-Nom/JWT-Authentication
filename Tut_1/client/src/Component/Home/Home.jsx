@@ -5,8 +5,17 @@ import { FaFolder } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
 import { MdFamilyRestroom } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 
-const Home = () => {
+const Home = (props) => {
+
+  const navigate = useNavigate();
+  const { userData } = props.location.state;
+
+  if (!userData) {
+    navigate("/"); // Redirect to login page if user data is not available
+    return null; // Return null to prevent further rendering
+  }
   return (
     <div>
       <div className="main_Home">
@@ -30,7 +39,11 @@ const Home = () => {
 
         <div className="right_Home">
                 <h1><MdFamilyRestroom /></h1>
-                <h1>Welcome to Family Tree App</h1>
+                <h1>
+                  {
+                    userData.isAdmin ? `Welcome Admin ${userData.username}` : `Welcome User ${userData.username}`
+                  }
+                </h1>
                 <br />
                 <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus, saepe!</p>
                 <br />
