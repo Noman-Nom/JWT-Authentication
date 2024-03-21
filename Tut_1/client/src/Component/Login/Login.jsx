@@ -31,7 +31,7 @@ const Login = () => {
       const data = await response.json();
       if (response.status === 200) {
         alert('Logged in successfully');
-        navigate('/home'); // Redirect to Home page
+        navigate('/home', { state: { username: values.username, isAdmin: data.isAdmin } });
       } else {
         alert(data.message || 'Failed to login');
       }

@@ -5,8 +5,12 @@ import { FaFolder } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
 import { MdFamilyRestroom } from "react-icons/md";
+import { useLocation } from 'react-router-dom'
 
 const Home = () => {
+
+  const location = useLocation(); // Access location object
+  const { username, isAdmin } = location.state || {};
   return (
     <div>
       <div className="main_Home">
@@ -30,7 +34,7 @@ const Home = () => {
 
         <div className="right_Home">
                 <h1><MdFamilyRestroom /></h1>
-                <h1>Welcome to Family Tree App</h1>
+                <h1>Welcome <span>{isAdmin ? 'Admin' : 'User'} </span> {username}  to Family Tree App</h1>
                 <br />
                 <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus, saepe!</p>
                 <br />
