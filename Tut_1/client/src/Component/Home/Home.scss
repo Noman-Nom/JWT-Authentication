@@ -76,6 +76,18 @@
         justify-content: center;
         align-items: center;
 
+        h1{
+            color: rgb(11, 23, 44);
+            font-size: 30px;
+            margin-bottom: 20px;
+
+            span{
+                color: rgb(0, 140, 255);
+            }
+        }
+
+
+
         p{
             width: 50%;
             justify-content: center;
