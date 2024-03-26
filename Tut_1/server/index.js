@@ -59,7 +59,7 @@ app.post("/api/refresh", (req, res) => {
 
 const generateAccessToken = (user) => {
   return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "mySecretKey", {
-    expiresIn: "30s",
+    expiresIn: "60s",
   });
 };
 
@@ -81,7 +81,7 @@ app.post("/api/login", (req, res) => {
       username: user.username,
       isAdmin: user.isAdmin,
       accessToken,
-      refreshToken, // Ensure this is included if you want it returned
+      refreshToken, 
     });
   } else {
     res.status(400).json({ message: "Invalid Username or Password" });
