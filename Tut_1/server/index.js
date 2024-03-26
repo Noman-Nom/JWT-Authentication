@@ -24,6 +24,12 @@ const users = [
     password: "saif1234",
     isAdmin: false,
   },
+  {
+    id: 4,
+    username: "hassan",
+    password: "hassan1234",
+    isAdmin: false,
+  },
 ];
 
 let refreshTokens = [];
